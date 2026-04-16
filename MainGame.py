@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib as plt
-
+moveselect = True
 
 
 
@@ -490,7 +490,7 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     return health1, health2, stun1, stun2, punishvalue1, punishvalue2
 
     
-    
+    #note: FIX PLAYERSTUN NOT WORKING!!!!
 
 
 
@@ -498,7 +498,7 @@ while gameend == False:
     while moveselect == True:
         if playerstun1 == False:
             move1 = input("Player 1, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
-            if move1 == Moves:
+            if move1 in Moves:
                 moveselect = False
             elif move1 == "help":
                 c1.help()
@@ -507,10 +507,11 @@ while gameend == False:
         else:
             move1 = "stunned"
             moveselect = False
+    moveselect = True
     while moveselect == True:
         if playerstun2 == False:
             move2 = input("Player 2, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
-            if move2 == Moves:
+            if move2 in Moves:
                 moveselect = False
             elif move2 == "help":
                 c1.help()
