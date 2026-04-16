@@ -495,6 +495,7 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
 
 
 while gameend == False:
+    moveselect = True
     while moveselect == True:
         if playerstun1 == False:
             move1 = input("Player 1, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
