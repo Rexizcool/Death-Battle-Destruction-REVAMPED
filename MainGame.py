@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib as plt
+import os
+
 moveselect = True
 
 
@@ -163,6 +165,8 @@ class Knight(Character):
 class Samurai(Character):
     def __init__(self, playerhp):
         self.playerhp = playerhp
+     def help(self):
+        print("MOVES: \n Slash - Deals 2 damage, deals 3 damage if you take damage on the same turn, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nShoulder Bash - Counters Parry and Heal. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
         if move == "strike":
             damage = 2
@@ -445,6 +449,8 @@ while selecting2 == True:
         c2 = Mage(HP2, doubling)
         selecting2 = False
 
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 
@@ -500,6 +506,7 @@ while gameend == False:
         if playerstun1 == False:
             move1 = input("Player 1, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
             if move1 in Moves:
+                os.system('cls' if os.name == 'nt' else 'clear')
                 moveselect = False
             elif move1 == "help":
                 c1.help()
@@ -513,6 +520,7 @@ while gameend == False:
         if playerstun2 == False:
             move2 = input("Player 2, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
             if move2 in Moves:
+                os.system('cls' if os.name == 'nt' else 'clear')
                 moveselect = False
             elif move2 == "help":
                 c1.help()
