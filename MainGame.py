@@ -1,3 +1,9 @@
+import pandas as pd
+import matplotlib as plt
+
+
+
+
 playerstun1 = False
 playerstun2 = False
 punish1 = 0
