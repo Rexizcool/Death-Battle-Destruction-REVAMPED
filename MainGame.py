@@ -162,7 +162,7 @@ class Knight(Character):
 class Samurai(Character):
     def __init__(self, playerhp):
         self.playerhp = playerhp
-     def help(self):
+    def help(self):
         print("MOVES: \n Slash - Deals 2 damage, deals 3 damage if you take damage on the same turn, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nShoulder Bash - Counters Parry and Heal. Breaks through Parry, granting an extra turn and +2 damage to any attacks done during said turn. Interrupts and deals 1 damage against Heal (DODGE type)\n Warrior's Parry - Counters any attacks, returning the attack with an extra +2 damage and healing for 1 HP (PARRY type)")
     def moveinfo(self, move):
         if move == "strike":
@@ -620,6 +620,7 @@ while selecting1 == True:
         selecting1 = False
     elif whichcharacter1 == "pirate" or whichcharacter1 == "Pirate":
         c1 = Pirate(HP1, pirate_counter1)
+        selecting1 = False
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
@@ -634,6 +635,7 @@ while selecting2 == True:
         selecting2 = False
     elif whichcharacter2 == "pirate" or whichcharacter2 == "Pirate":
         c2 = Pirate(HP2, pirate_counter2)
+        selecting2 = False
 
 #function to clear the console
 def clear_console():
@@ -712,7 +714,7 @@ while gameend == False:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 moveselect = False
             elif move2 == "help":
-                c1.help()
+                c2.help()
             else:
                 print("Sorry, that is not a valid move.")
         else:
