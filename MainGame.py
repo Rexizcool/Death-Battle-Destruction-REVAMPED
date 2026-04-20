@@ -24,6 +24,7 @@ class Character:
     def __init__(self, name):
         self.name = name
 
+#note: overheal mechanic perchance? (healing over your max health gives you temporary HP for that turn. would certainly make coding this easier and maybe make the game more interesting)
 
 class Knight(Character):
     def __init__(self, playerhp):
@@ -280,9 +281,10 @@ class Samurai(Character):
             return damage, heal, stun, parrystun
 
 class Mage(Character):
-    def __init__(self, playerhp, doubling):
+    def __init__(self, playerhp, doubling, defense_magic):
         self.playerhp = playerhp
         self.doubling = doubling
+        self.defense_magic = defense_magic
     def moveinfo(self, move):
         if move == "strike":
             damage = 1
@@ -322,19 +324,36 @@ class Mage(Character):
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
         if self.playerhp <=13:
-            self.playerhp = (self.playerhp) + healingtaken - damagetaken
-            return self.playerhp
+            if self.defense_magic == True:
+                self.playerhp = (self.playerhp) + healingtaken - (damagetaken - 1)
+                if damagetaken >= 1:
+                    self.defense_magic = False
+                return self.playerhp
+            else:
+                self.playerhp = (self.playerhp) + healingtaken - damagetaken
+                return self.playerhp
         else:
-            self.playerhp = 15 - damagetaken
-            return self.playerhp
+            if self.defense_magic == True:
+                self.playerhp = 15 - (damagetaken - 1)
+                if damagetaken >= 1:
+                    self.defense_magic = False
+                return self.playerhp
+            else:
+                self.playerhp = 15 - damagetaken
+                return 
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
             stun = False
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick":
-                damage = 1
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = 1
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = 3
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
                 damage = 0
                 return damage, heal, stun, parrystun
@@ -342,9 +361,15 @@ class Mage(Character):
                 damage = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
-                damage = 1
-                interrupt = True
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = 1
+                    interrupt = True
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = 3
+                    interrupt = True
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
             else:
                 damage = 1
                 interrupt = True
@@ -354,18 +379,36 @@ class Mage(Character):
             stun = False
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
-                damage = 0
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = 0
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = 1
+                    stun = True
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
-                damage = 1
-                stun = True
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = 1
+                    stun = True
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = 2
+                    stun = True
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
                 return damage, heal, stun, parrystun
             else:
-                damage = 1
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = 0
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = 1
+                    stun = True
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
         if yourmove == "dodge" or yourmove == 3:
             heal = 0
             damage = 0
@@ -391,9 +434,15 @@ class Mage(Character):
             heal = 0
             stun = False
             parrystun = False
+            self.defense_magic = True
             if opponentmove == "strike" or opponentmove == "kick":
-                damage = opponentdamage+1
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    damage = opponentdamage
+                    return damage, heal, stun, parrystun
+                else:
+                    damage = opponentdamage+2
+                    self.doubling = False
+                    return damage, heal, stun, parrystun
             elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
                 damage = 0
                 return damage, heal, stun, parrystun
@@ -408,8 +457,19 @@ class Mage(Character):
                 heal = 0
                 return damage, heal, stun, parrystun
             else:
-                heal = 2
-                return damage, heal, stun, parrystun
+                if self.doubling == False:
+                    heal = 3
+                    return damage, heal, stun, parrystun
+                else:
+                    if opponentmove == "strike":
+                        heal = 3
+                        self.doubling = False
+                        return damage, heal, stun, parrystun
+                    else:
+                        heal = 4
+                        self.doubling = False
+                        return damage, heal, stun, parrystun
+        #PLEASE OPTIMIZE THIS LATER. THERE MUST BE A BETTER WAY TO DO THIS (note to self)
         else:
             damage = 0
             heal = 0
