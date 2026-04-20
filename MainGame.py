@@ -1,11 +1,10 @@
+#importing necessary tools
 import pandas as pd
 import matplotlib as plt
 import os
 
+#initializing variables
 moveselect = True
-
-
-
 playerstun1 = False
 playerstun2 = False
 punish1 = 0
@@ -15,15 +14,12 @@ selecting1 = True
 selecting2 = True
 interrupt = False
 doubling = False
-
-
-
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"]
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"]
-
 HP1 = 15
 HP2 = 15
 
+#creating classes for characters
 class Character:
     def __init__(self, name):
         self.name = name
@@ -424,7 +420,7 @@ class Mage(Character):
 
 
 
-
+#while loops for selecting characters at the start of the game
 while selecting1 == True:
     whichcharacter1 = input("---------- PLAYER 1 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
     if whichcharacter1 == "knight":
@@ -449,6 +445,7 @@ while selecting2 == True:
         c2 = Mage(HP2, doubling)
         selecting2 = False
 
+#function to clear the console
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -456,7 +453,7 @@ def clear_console():
 
 
 
-
+#function for determining how turns play out
 def turn(firstmove, secondmove, character1, character2, health1, health2, punishvalue1, punishvalue2):
     punishvalue1 -= 1
     punishvalue2 -= 1
@@ -496,10 +493,9 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     return health1, health2, stun1, stun2, punishvalue1, punishvalue2
 
     
-    #note: FIX PLAYERSTUN NOT WORKING!!!!
 
 
-
+#while loop that lasts until the game ends
 while gameend == False:
     moveselect = True
     while moveselect == True:
