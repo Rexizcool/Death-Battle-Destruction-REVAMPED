@@ -12,6 +12,8 @@ punish2 = 0
 gameend =False
 selecting1 = True
 selecting2 = True
+overhealing1 = False
+overhealing2 = False
 interrupt = False
 doubling1 = False
 doubling2 = False
@@ -75,6 +77,12 @@ class Knight(Character):
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
@@ -198,6 +206,12 @@ class Samurai(Character):
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
@@ -322,13 +336,22 @@ class Mage(Character):
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
             if self.defense_magic == True:
-                self.playerhp = (self.playerhp) + healingtaken - (damagetaken - 1)
-                if damagetaken >= 1:
+                if damagetaken>=1:
+                    self.playerhp = (self.playerhp) + healingtaken - (damagetaken - 1)
                     self.defense_magic = False
-                return self.playerhp
+                    return self.playerhp
+                else:
+                    self.playerhp = (self.playerhp) + healingtaken - damagetaken
+                    return self.playerhp
             else:
                 self.playerhp = (self.playerhp) + healingtaken - damagetaken
                 return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
@@ -513,9 +536,20 @@ class Pirate(Character):
                 self.playerhp = (self.playerhp) + healingtaken - damagetaken
                 return self.playerhp
             else:
-                self.playerhp = (self.playerhp) + healingtaken - (damagetaken-1)
-                self.counter = False
-                return self.playerhp
+                if damagetaken >=1:
+                    self.playerhp = (self.playerhp) + healingtaken - (damagetaken-1)
+                    self.counter = False
+                    return self.playerhp
+                else:
+                    self.playerhp = (self.playerhp) + healingtaken - damagetaken
+                    self.counter = False
+                    return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
@@ -646,7 +680,13 @@ def clear_console():
 
 
 #function for determining how turns play out
-def turn(firstmove, secondmove, character1, character2, health1, health2, punishvalue1, punishvalue2):
+def turn(firstmove, secondmove, character1, character2, health1, health2, punishvalue1, punishvalue2, overheal1, overheal2):
+    if overheal1 == True:
+        health1 = 15
+        overheal1 = False
+    if overheal2 == True:
+        health2 = 15
+        overheal2 = False
     punishvalue1 -= 1
     punishvalue2 -= 1
     damageamount1, checkinterrupt1, healamount1, movetype1 = character1.moveinfo(firstmove)
@@ -669,11 +709,8 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     
     health1 = character1.takedamage(damage2, heal1)
     health2 = character2.takedamage(damage1, heal2)
-    
-    if health1 >= 15:
-        health1 = 15
-    if health2 >= 15:
-        health2 = 15
+    overheal1 = character1.resetoverheal()
+    overheal2 = character2.resetoverheal()
     
 
     if stun1 == True:
@@ -692,6 +729,10 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
 
 #while loop that lasts until the game ends
 while gameend == False:
+    if HP1 >= 15:
+        HP1 = 15
+    if HP2 >= 15:
+        HP2 = 15
     moveselect = True
     while moveselect == True:
         if playerstun1 == False:
@@ -720,7 +761,7 @@ while gameend == False:
         else:
             move2 = "stunned"
             moveselect = False
-    HP1, HP2, playerstun1, playerstun2, punish1, punish2 = turn(move1, move2, c1, c2, HP1, HP2, punish1, punish2)
+    HP1, HP2, playerstun1, playerstun2, punish1, punish2 = turn(move1, move2, c1, c2, HP1, HP2, punish1, punish2, overhealing1, overhealing2)
 
     if HP1 <= 0 and HP2 > 0:
         print("Player 2 wins!!")
