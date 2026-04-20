@@ -3,7 +3,6 @@ Death Battle Destruction, a game where you must battle your opponents using noth
 
 TO-DO:
 
-Finish Mage
 
 Cowboy
 
@@ -17,4 +16,4 @@ Polish how the game returns information
 
 finish those tests
 
-Finish pandas database stuff (COMES LAST)
+Finish pandas database+matplotlib stuff (COMES LAST)
