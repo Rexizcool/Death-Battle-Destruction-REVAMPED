@@ -17,6 +17,8 @@ doubling1 = False
 doubling2 = False
 defensive_magic1 = False
 defensive_magic2 = False
+pirate_counter1 = True
+pirate_counter2 = True
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"]
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"]
 HP1 = 15
@@ -161,7 +163,7 @@ class Samurai(Character):
     def __init__(self, playerhp):
         self.playerhp = playerhp
      def help(self):
-        print("MOVES: \n Slash - Deals 2 damage, deals 3 damage if you take damage on the same turn, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nShoulder Bash - Counters Parry and Heal. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
+        print("MOVES: \n Slash - Deals 2 damage, deals 3 damage if you take damage on the same turn, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nShoulder Bash - Counters Parry and Heal. Breaks through Parry, granting an extra turn and +2 damage to any attacks done during said turn. Interrupts and deals 1 damage against Heal (DODGE type)\n Warrior's Parry - Counters any attacks, returning the attack with an extra +2 damage and healing for 1 HP (PARRY type)")
     def moveinfo(self, move):
         if move == "strike":
             damage = 2
@@ -279,6 +281,8 @@ class Mage(Character):
         self.playerhp = playerhp
         self.doubling = doubling
         self.defense_magic = defense_magic
+    def help(self):
+        print("MOVES: \n Staff Stike - Deals 1 damage, deals 3 damage when Doubled, interrupts Heal (STRIKE type)\n Vine Grab - Deals 0 damage, deals 1 damage and stuns when catching dodge, allowing for a free turn. Deals an extra +1 damage when doubled (KICK type)\n Clone - Sets up a clone in your place, granting the Doubling effect to your next action. Counters Strike and Parry. Causes strike to hit your clone instead, removing the Doubling effect but granting an extra turn, as well as causing Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn. Take +1 damage when getting hit by Kick (DODGE type)\n Arcane Barrier - Counters any attacks, returning the attack with no extra damage(+2 extra when Doubled), as well as reducing the next damage you take by -1 (PARRY type)\n Heal Spell - Heals for 3 HP (4 HP when Doubled)")
     def moveinfo(self, move):
         if move == "strike":
             damage = 1
@@ -605,27 +609,31 @@ class Pirate(Character):
 #while loops for selecting characters at the start of the game
 while selecting1 == True:
     whichcharacter1 = input("---------- PLAYER 1 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter1 == "knight":
+    if whichcharacter1 == "knight" or whichcharacter1 == "Knight":
         c1 = Knight(HP1)
         selecting1 = False
-    elif whichcharacter1 == "samurai":
+    elif whichcharacter1 == "samurai" or whichcharacter1 == "Samurai":
         c1 = Samurai(HP1)
         selecting1 = False
-    elif whichcharacter1 == "mage":
-        c1 = Mage(HP1, doubling)
+    elif whichcharacter1 == "mage" or whichcharacter1 == "Mage":
+        c1 = Mage(HP1, doubling1, defensive_magic1)
         selecting1 = False
+    elif whichcharacter1 == "pirate" or whichcharacter1 == "Pirate":
+        c1 = Pirate(HP1, pirate_counter1)
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter2 == "knight":
+    if whichcharacter2 == "knight" or whichcharacter2 == "Knight":
         c2 = Knight(HP2)
         selecting2 = False
-    if whichcharacter2 == "samurai":
+    elif whichcharacter2 == "samurai" or whichcharacter2 == "Samurai":
         c2 = Samurai(HP2)
         selecting2 = False
-    if whichcharacter2 == "mage":
-        c2 = Mage(HP2, doubling)
+    elif whichcharacter2 == "mage" or whichcharacter2 == "Mage":
+        c2 = Mage(HP2, doubling2, defensive_magic2)
         selecting2 = False
+    elif whichcharacter2 == "pirate" or whichcharacter2 == "Pirate":
+        c2 = Pirate(HP2, pirate_counter2)
 
 #function to clear the console
 def clear_console():
