@@ -13,7 +13,10 @@ gameend =False
 selecting1 = True
 selecting2 = True
 interrupt = False
-doubling = False
+doubling1 = False
+doubling2 = False
+defensive_magic1 = False
+defensive_magic2 = False
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"]
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"]
 HP1 = 15
@@ -24,7 +27,6 @@ class Character:
     def __init__(self, name):
         self.name = name
 
-#note: overheal mechanic perchance? (healing over your max health gives you temporary HP for that turn. would certainly make coding this easier and maybe make the game more interesting)
 
 class Knight(Character):
     def __init__(self, playerhp):
@@ -69,11 +71,7 @@ class Knight(Character):
             movetype = "nothing"
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
-        if self.playerhp <=13:
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
-            return self.playerhp
-        else:
-            self.playerhp = 15 - damagetaken
             return self.playerhp
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
@@ -196,11 +194,7 @@ class Samurai(Character):
             movetype = "nothing"
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
-        if self.playerhp <=13:
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
-            return self.playerhp
-        else:
-            self.playerhp = 15 - damagetaken
             return self.playerhp
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
@@ -323,7 +317,6 @@ class Mage(Character):
             movetype = "nothing"
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
-        if self.playerhp <=13:
             if self.defense_magic == True:
                 self.playerhp = (self.playerhp) + healingtaken - (damagetaken - 1)
                 if damagetaken >= 1:
@@ -332,15 +325,6 @@ class Mage(Character):
             else:
                 self.playerhp = (self.playerhp) + healingtaken - damagetaken
                 return self.playerhp
-        else:
-            if self.defense_magic == True:
-                self.playerhp = 15 - (damagetaken - 1)
-                if damagetaken >= 1:
-                    self.defense_magic = False
-                return self.playerhp
-            else:
-                self.playerhp = 15 - damagetaken
-                return 
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if yourmove == "strike" or yourmove == 1:
             heal = 0
@@ -538,7 +522,10 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     health1 = character1.takedamage(damage2, heal1)
     health2 = character2.takedamage(damage1, heal2)
     
-
+    if health1 >= 15:
+        health1 = 15
+    if health2 >= 15:
+        health2 = 15
     
 
     if stun1 == True:
