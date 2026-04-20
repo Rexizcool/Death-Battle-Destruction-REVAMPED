@@ -461,6 +461,144 @@ class Mage(Character):
             parrystun = False
             return damage, heal, stun, parrystun
 
+class Pirate(Character):
+    def __init__(self, playerhp, counter):
+        self.playerhp = playerhp
+        self.counter = counter
+    def help(self):
+        print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
+    def moveinfo(self, move):
+        if move == "strike":
+            damage = 2
+            interrupt = False
+            heal = 0
+            movetype = "striketype"
+            return damage, interrupt, heal, movetype
+        if move == "kick":
+            damage = 1
+            interrupt = False
+            heal = 0
+            movetype = "kicktype"
+            return damage, interrupt, heal, movetype
+        if move == "dodge":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "dodgetype"
+            return damage, interrupt, heal, movetype
+        if move == "parry":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "parrytype"
+            return damage, interrupt, heal, movetype
+        if move == "heal":
+            damage = 0
+            interrupt = True
+            heal = 1                                                       
+            movetype = "healtype"
+            return damage, interrupt, heal, movetype
+        else:
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "nothing"
+            return damage, interrupt, heal, movetype
+    def takedamage(self, damagetaken, healingtaken):
+            if self.counter == False:
+                self.playerhp = (self.playerhp) + healingtaken - damagetaken
+                return self.playerhp
+            else:
+                self.playerhp = (self.playerhp) + healingtaken - (damagetaken-1)
+                self.counter = False
+                return self.playerhp
+    def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if yourmove == "strike" or yourmove == 1:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                damage = 2
+                self.counter = True
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "heal":
+                damage = 3
+                return damage, heal, stun, parrystun
+            else:
+                damage = 2
+                return damage, heal, stun, parrystun
+        if yourmove == "kick" or yourmove == 2:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                damage = 1
+                return damage, heal, stun, parrystun
+            elif opponentmove == "kick":
+                damage = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 2
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            else:
+                damage = 1
+                return damage, heal, stun, parrystun
+        if yourmove == "dodge" or yourmove == 3:
+            heal = 0
+            damage = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                stun = True
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                stun = True
+                return damage, heal, stun, parrystun
+            elif opponentmove == "heal" or opponentmove == "kick":
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                stun = True
+                parrystun = True
+                return damage, heal, stun, parrystun
+            else:
+                return damage, heal, stun, parrystun
+        if yourmove == "parry" or yourmove == 4:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick":
+                damage = opponentdamage+1
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "heal":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 3
+                return damage, heal, stun, parrystun
+            else:
+                damage = 0
+                return damage, heal, stun, parrystun
+        if yourmove == "heal" or yourmove == 5:
+            damage = 0
+            stun = False
+            parrystun = False
+            heal = 1
+            return damage, heal, stun, parrystun
+        else:
+            damage = 0
+            heal = 0
+            stun = False
+            parrystun = False
+            return damage, heal, stun, parrystun
 
 
 
