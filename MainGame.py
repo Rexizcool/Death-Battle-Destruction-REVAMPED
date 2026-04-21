@@ -497,7 +497,7 @@ class Pirate(Character):
         self.playerhp = playerhp
         self.counter = counter
     def help(self):
-        print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
+        print("MOVES: \n Sabre - Deals 2 damage, if your opponent also used Strike, reduce the damage of said Strike by 1. Deals 3 damage against Heal (STRIKE type)\n Peg Leg - Deals 1 damage, deals 2 damage against Dodge and 3 damage against Kick (KICK type)\n All Hands on Deck - Counters Strike, Parry, and Dodge. Causes Strike and Parry to miss, granting an extra turn. If your opponent also used Dodge, stun them and get an extra turn (DODGE type)\n Hook - Counters any attacks, returning the attack with an extra +1 damage. If your opponent also used Parry, deal 3 damage to them (PARRY type)\n Rum - Heals for 1 HP, cannot be interrupted. Throws a bottle that interrupts Heal. (HEAL type)")
     def moveinfo(self, move):
         if move == "strike":
             damage = 2
