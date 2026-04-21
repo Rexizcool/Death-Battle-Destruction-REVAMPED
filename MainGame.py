@@ -1,6 +1,7 @@
 #importing necessary tools
 import pandas as pd
 import matplotlib as plt
+import pytest
 import os
 
 #initializing variables
