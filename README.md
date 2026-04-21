@@ -6,10 +6,6 @@ TO-DO:
 
 Cowboy
 
-Pirate
-
-Ninja
-
 Astronaut
 
 Polish how the game returns information
