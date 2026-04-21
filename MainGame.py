@@ -15,12 +15,16 @@ selecting2 = True
 overhealing1 = False
 overhealing2 = False
 interrupt = False
+delaying_heal1 = False
+delaying_heal2 = False
 doubling1 = False
 doubling2 = False
 defensive_magic1 = False
 defensive_magic2 = False
 pirate_counter1 = True
 pirate_counter2 = True
+elusive1 = 0
+elusive2 = 0
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"]
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"]
 HP1 = 15
@@ -605,7 +609,6 @@ class Pirate(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 stun = True
-                parrystun = True
                 return damage, heal, stun, parrystun
             else:
                 return damage, heal, stun, parrystun
@@ -638,37 +641,215 @@ class Pirate(Character):
             parrystun = False
             return damage, heal, stun, parrystun
 
+class Ninja(Character):
+    def __init__(self, playerhp, evasion, delayed_heal):
+        self.playerhp = playerhp
+        self.evasion = evasion
+        self.delayed_heal = delayed_heal
+    def help(self):
+        print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
+    def moveinfo(self, move):
+        if move == "strike":
+            damage = 2
+            interrupt = False
+            heal = 0
+            movetype = "striketype"
+            return damage, interrupt, heal, movetype
+        if move == "kick":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "kicktype"
+            return damage, interrupt, heal, movetype
+        if move == "dodge":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "dodgetype"
+            return damage, interrupt, heal, movetype
+        if move == "parry":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "parrytype"
+            return damage, interrupt, heal, movetype
+        if move == "heal":
+            damage = 0
+            interrupt = False
+            heal = 1
+            movetype = "healtype"
+            return damage, interrupt, heal, movetype
+        else:
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "nothing"
+            return damage, interrupt, heal, movetype
+    def takedamage(self, damagetaken, healingtaken):
+        if self.evasion <= damagetaken:
+                self.playerhp = (self.playerhp) + healingtaken - (damagetaken - self.evasion)
+                self.evasion = 0
+        elif self.evasion > damagetaken:
+                self.evasion -= damagetaken
+                self.playerhp = (self.playerhp) + healingtaken - 0
+        return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
+    def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if self.delayed_heal == True:
+            if stopheal == False:
+                heal = 1
+                self.delayed_heal = False
+            else:
+                heal = 0
+                self.delayed_heal = False
+        else:
+            heal = 0
+        if yourmove == "strike" or yourmove == 1:
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick":
+                damage = 2
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "heal":
+                damage = 3
+                return damage, heal, stun, parrystun
+            else:
+                damage = 2
+                interrupt = True
+                return damage, heal, stun, parrystun
+        if yourmove == "kick" or yourmove == 2:
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 3
+                if self.evasion < 3:
+                    self.evasion += 1
+                else:
+                    self.evasion = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            else:
+                damage = 0
+                return damage, heal, stun, parrystun
+        if yourmove == "dodge" or yourmove == 3:
+            damage = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                stun = True
+                if self.evasion < 3:
+                    self.evasion+=1
+                else:
+                    self.evasion = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "kick":
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "heal":
+                if self.evasion < 3:
+                    self.evasion+=1
+                else:
+                    self.evasion = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                if self.evasion < 3:
+                    self.evasion+=1
+                else:
+                    self.evasion = 3
+                stun = True
+                parrystun = True
+                return damage, heal, stun, parrystun
+            else:
+                return damage, heal, stun, parrystun
+        if yourmove == "parry" or yourmove == 4:
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick":
+                damage = 2
+                if self.evasion <= 1:
+                    self.evasion += 2
+                elif self.evasion == 2:
+                    self.evasion += 1
+                else:
+                    self.evasion = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
+                damage = 0
+                return damage, heal, stun, parrystun
+            else:
+                damage = 0
+                return damage, heal, stun, parrystun
+        if yourmove == "heal" or yourmove == 5:
+            damage = 0
+            stun = False
+            parrystun = False
+            if stopheal == True:
+                return damage, heal, stun, parrystun
+            else:
+                self.delayed_heal = True
+                if self.evasion < 3:
+                    self.evasion += 1
+                else:
+                    self.evasion = 3
+                return damage, heal, stun, parrystun
+        else:
+            damage = 0
+            heal = 0
+            stun = False
+            parrystun = False
+            return damage, heal, stun, parrystun
 
 
 #while loops for selecting characters at the start of the game
 while selecting1 == True:
     whichcharacter1 = input("---------- PLAYER 1 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter1 == "knight" or whichcharacter1 == "Knight":
+    if whichcharacter1 == "knight" or whichcharacter1 == "KNIGHT":
         c1 = Knight(HP1)
         selecting1 = False
-    elif whichcharacter1 == "samurai" or whichcharacter1 == "Samurai":
+    elif whichcharacter1 == "samurai" or whichcharacter1 == "SAMURAI":
         c1 = Samurai(HP1)
         selecting1 = False
-    elif whichcharacter1 == "mage" or whichcharacter1 == "Mage":
+    elif whichcharacter1 == "mage" or whichcharacter1 == "MAGE":
         c1 = Mage(HP1, doubling1, defensive_magic1)
         selecting1 = False
-    elif whichcharacter1 == "pirate" or whichcharacter1 == "Pirate":
+    elif whichcharacter1 == "pirate" or whichcharacter1 == "NINJA":
         c1 = Pirate(HP1, pirate_counter1)
+        selecting1 = False
+    elif whichcharacter1 == "ninja" or whichcharacter1 == "NINJA":
+        c1 = Ninja(HP1, elusive1, delaying_heal1)
         selecting1 = False
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter2 == "knight" or whichcharacter2 == "Knight":
+    if whichcharacter2 == "knight" or whichcharacter2 == "KNIGHT":
         c2 = Knight(HP2)
         selecting2 = False
-    elif whichcharacter2 == "samurai" or whichcharacter2 == "Samurai":
+    elif whichcharacter2 == "samurai" or whichcharacter2 == "SAMURAI":
         c2 = Samurai(HP2)
         selecting2 = False
-    elif whichcharacter2 == "mage" or whichcharacter2 == "Mage":
+    elif whichcharacter2 == "mage" or whichcharacter2 == "MAGE":
         c2 = Mage(HP2, doubling2, defensive_magic2)
         selecting2 = False
-    elif whichcharacter2 == "pirate" or whichcharacter2 == "Pirate":
+    elif whichcharacter2 == "pirate" or whichcharacter2 == "PIRATE":
         c2 = Pirate(HP2, pirate_counter2)
+        selecting2 = False
+    elif whichcharacter2 == "ninja" or whichcharacter2 == "NINJA":
+        c2 = Ninja(HP1, elusive2, delaying_heal2)
         selecting2 = False
 
 #function to clear the console
