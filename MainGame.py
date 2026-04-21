@@ -370,9 +370,13 @@ class Mage(Character):
                     self.doubling = False
                     return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
+                if self.doubling == True:
+                    self.doubling = False
                 damage = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
+                if self.doubling == True:
+                    self.doubling = False
                 damage = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
@@ -413,6 +417,8 @@ class Mage(Character):
                     self.doubling = False
                     return damage, heal, stun, parrystun
             elif opponentmove == "parry":
+                if self.doubling == True:
+                    self.doubling = False
                 damage = 0
                 return damage, heal, stun, parrystun
             else:
@@ -459,10 +465,14 @@ class Mage(Character):
                     self.doubling = False
                     return damage, heal, stun, parrystun
             elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
+                if self.doubling == True:
+                    self.doubling = False
                 damage = 0
                 return damage, heal, stun, parrystun
             else:
                 damage = 0
+                if self.doubling == True:
+                    self.doubling = False
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
             damage = 0
@@ -470,6 +480,8 @@ class Mage(Character):
             parrystun = False
             if stopheal == True:
                 heal = 0
+                if self.doubling == True:
+                    self.doubling = False
                 return damage, heal, stun, parrystun
             else:
                 if self.doubling == False:
