@@ -504,6 +504,146 @@ class Mage(Character):
             parrystun = False
             return damage, heal, stun, parrystun
 
+class Cowboy(Character):
+    def __init__(self, playerhp, delayed_heal):
+        self.playerhp = playerhp
+        self.delayed_heal = delayed_heal
+    def help(self):
+        print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
+    def moveinfo(self, move):
+        if move == "strike":
+            damage = 2
+            interrupt = True
+            heal = 0
+            movetype = "striketype"
+            return damage, interrupt, heal, movetype
+        if move == "kick":
+            damage = 1
+            interrupt = True
+            heal = 0
+            movetype = "kicktype"
+            return damage, interrupt, heal, movetype
+        if move == "dodge":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "dodgetype"
+            return damage, interrupt, heal, movetype
+        if move == "parry":
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "parrytype"
+            return damage, interrupt, heal, movetype
+        if move == "heal":
+            damage = 0
+            interrupt = False
+            heal = 2
+            movetype = "healtype"
+            return damage, interrupt, heal, movetype
+        else:
+            damage = 0
+            interrupt = False
+            heal = 0
+            movetype = "nothing"
+            return damage, interrupt, heal, movetype
+    def takedamage(self, damagetaken, healingtaken):
+            self.playerhp = (self.playerhp) + healingtaken - damagetaken
+            return self.playerhp
+    def resetoverheal(self):
+        overheal = False
+        if self.playerhp > 15:
+            self.playerhp = 15
+            overheal = True
+        return overheal
+    def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if yourmove == "strike" or yourmove == 1:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                damage = 2
+                return damage, heal, stun, parrystun
+            elif opponentmove == "kick":
+                damage = 2
+                heal = 1
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "heal":
+                damage = 2
+                interrupt = True
+                return damage, heal, stun, parrystun
+            else:
+                damage = 2
+                interrupt = True
+                return damage, heal, stun, parrystun
+        if yourmove == "kick" or yourmove == 2:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
+                damage = 1
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge":
+                damage = 3
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                damage = 0
+                return damage, heal, stun, parrystun
+            else:
+                damage = 1
+                return damage, heal, stun, parrystun
+        if yourmove == "dodge" or yourmove == 3:
+            heal = 0
+            damage = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike":
+                stun = True
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "heal" or opponentmove == "kick":
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry":
+                stun = True
+                parrystun = True
+                return damage, heal, stun, parrystun
+            else:
+                return damage, heal, stun, parrystun
+        if yourmove == "parry" or yourmove == 4:
+            heal = 0
+            stun = False
+            parrystun = False
+            if opponentmove == "strike" or opponentmove == "kick":
+                damage = opponentdamage+2
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
+                damage = 0
+                return damage, heal, stun, parrystun
+            else:
+                damage = 0
+                return damage, heal, stun, parrystun
+        if yourmove == "heal" or yourmove == 5:
+            damage = 0
+            stun = False
+            parrystun = False
+            if stopheal == True:
+                heal = 0
+                return damage, heal, stun, parrystun
+            else:
+                heal = 2
+                return damage, heal, stun, parrystun
+        else:
+            damage = 0
+            heal = 0
+            stun = False
+            parrystun = False
+            return damage, heal, stun, parrystun
+
 class Pirate(Character):
     def __init__(self, playerhp, counter):
         self.playerhp = playerhp
