@@ -31,6 +31,8 @@ Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astrona
 HP1 = 15
 HP2 = 15
 
+
+
 #creating classes for characters
 class Character:
     def __init__(self, name):
@@ -1099,11 +1101,19 @@ while gameend == False:
 
     if HP1 <= 0 and HP2 > 0:
         print("Player 2 wins!!")
+        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter2], 'Losing Character': [whichcharacter1]})
         gameend = True
     elif HP1 > 0 and HP2 <= 0:
         print("Player 1 wins!!")
+        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter1], 'Losing Character': [whichcharacter2]})
         gameend = True
     elif HP1 <= 0 and HP2 <= 0:
         print("No one wins, you both suck")
     else:
         gameend = False
+
+df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
+
+
+
+
