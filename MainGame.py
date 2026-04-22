@@ -973,19 +973,19 @@ class Ninja(Character):
 #while loops for selecting characters at the start of the game
 while selecting1 == True:
     whichcharacter1 = input("---------- PLAYER 1 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter1 == "knight" or whichcharacter1 == "KNIGHT":
+    if whichcharacter1 == "knight" or whichcharacter1 == "KNIGHT" or whichcharacter1 == "Knight":
         c1 = Knight(HP1)
         selecting1 = False
-    elif whichcharacter1 == "samurai" or whichcharacter1 == "SAMURAI":
+    elif whichcharacter1 == "samurai" or whichcharacter1 == "SAMURAI" or whichcharacter1 == "Samurai":
         c1 = Samurai(HP1)
         selecting1 = False
-    elif whichcharacter1 == "mage" or whichcharacter1 == "MAGE":
+    elif whichcharacter1 == "mage" or whichcharacter1 == "MAGE" or whichcharacter1 == "Mage":
         c1 = Mage(HP1, doubling1, defensive_magic1)
         selecting1 = False
-    elif whichcharacter1 == "pirate" or whichcharacter1 == "NINJA":
+    elif whichcharacter1 == "pirate" or whichcharacter1 == "PIRATE" or whichcharacter1 == "Pirate":
         c1 = Pirate(HP1, pirate_counter1)
         selecting1 = False
-    elif whichcharacter1 == "ninja" or whichcharacter1 == "NINJA":
+    elif whichcharacter1 == "ninja" or whichcharacter1 == "NINJA" or whichcharacter1 == "Ninja":
         c1 = Ninja(HP1, elusive1, delaying_heal1)
         selecting1 = False
 
@@ -1101,19 +1101,15 @@ while gameend == False:
 
     if HP1 <= 0 and HP2 > 0:
         print("Player 2 wins!!")
-        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter2], 'Losing Character': [whichcharacter1]})
+        #df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter2], 'Losing Character': [whichcharacter1]})
         gameend = True
     elif HP1 > 0 and HP2 <= 0:
         print("Player 1 wins!!")
-        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter1], 'Losing Character': [whichcharacter2]})
+        #df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter1], 'Losing Character': [whichcharacter2]})
         gameend = True
     elif HP1 <= 0 and HP2 <= 0:
         print("No one wins, you both suck")
     else:
         gameend = False
 
-df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
-
-
-
-
+#df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
