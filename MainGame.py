@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib as plt
 import pytest
 import os
+import random
 
 #initializing variables
 moveselect = True
@@ -516,7 +517,7 @@ class Cowboy(Character):
     def moveinfo(self, move):
         if move == "strike":
             damage = 2
-            interrupt = True
+            interrupt = False
             heal = 0
             movetype = "striketype"
             return damage, interrupt, heal, movetype
@@ -527,21 +528,21 @@ class Cowboy(Character):
             movetype = "kicktype"
             return damage, interrupt, heal, movetype
         if move == "dodge":
-            damage = 0
+            damage = 1
             interrupt = False
             heal = 0
             movetype = "dodgetype"
             return damage, interrupt, heal, movetype
         if move == "parry":
-            damage = 0
+            damage = 1
             interrupt = False
             heal = 0
             movetype = "parrytype"
             return damage, interrupt, heal, movetype
         if move == "heal":
-            damage = 0
+            damage = 1
             interrupt = False
-            heal = 2
+            heal = 0
             movetype = "healtype"
             return damage, interrupt, heal, movetype
         else:
@@ -560,6 +561,15 @@ class Cowboy(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if self.delayed_heal == True:
+            if stopheal == False:
+                heal = 2
+                self.delayed_heal = False
+            else:
+                heal = 0
+                self.delayed_heal = False
+        else:
+            heal = 0
         if yourmove == "strike" or yourmove == 1:
             heal = 0
             stun = False
@@ -583,7 +593,7 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             else:
                 damage = 2
-                interrupt = True
+                interrupt = False
                 return damage, heal, stun, parrystun
         if yourmove == "kick" or yourmove == 2:
             heal = 0
@@ -591,9 +601,10 @@ class Cowboy(Character):
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
                 damage = 1
+                interrupt = True
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
-                damage = 3
+                damage = 2
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
@@ -603,7 +614,7 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
         if yourmove == "dodge" or yourmove == 3:
             heal = 0
-            damage = 0
+            damage = 1
             stun = False
             parrystun = False
             if opponentmove == "strike":
@@ -619,26 +630,29 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
         if yourmove == "parry" or yourmove == 4:
             heal = 0
+            damage = 1
             stun = False
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick":
-                damage = opponentdamage+2
+                damage = 2
                 return damage, heal, stun, parrystun
-            elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
+            elif opponentmove == "dodge": 
                 damage = 0
+                return damage, heal, stun, parrystun
+            elif opponentmove == "parry" or opponentmove == "heal":
                 return damage, heal, stun, parrystun
             else:
-                damage = 0
+                damage = 1
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
             damage = 0
             stun = False
+            heal = 0
             parrystun = False
             if stopheal == True:
-                heal = 0
                 return damage, heal, stun, parrystun
             else:
-                heal = 2
+                delayed_heal = True
                 return damage, heal, stun, parrystun
         else:
             damage = 0
