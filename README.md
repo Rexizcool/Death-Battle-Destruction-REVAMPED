@@ -4,8 +4,6 @@ Death Battle Destruction, a game where you must battle your opponents using noth
 TO-DO:
 
 
-Cowboy
-
 Astronaut
 
 Polish how the game returns information

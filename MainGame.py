@@ -1006,7 +1006,7 @@ class Ninja(Character):
             parrystun = False
             return damage, heal, stun, parrystun
 
-
+      bv
 #while loops for selecting characters at the start of the game
 while selecting1 == True:
     whichcharacter1 = input("---------- PLAYER 1 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
