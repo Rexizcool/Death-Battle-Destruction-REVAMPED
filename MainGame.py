@@ -39,7 +39,6 @@ class Character:
     def __init__(self, name):
         self.name = name
 
-
 class Knight(Character):
     def __init__(self, playerhp):
         self.playerhp = playerhp
@@ -586,6 +585,7 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
+                heal = -1
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
                 damage = 2
@@ -608,6 +608,7 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
+                heal = -1
                 return damage, heal, stun, parrystun
             else:
                 damage = 1
@@ -1002,32 +1003,32 @@ while selecting1 == True:
     elif whichcharacter1 == "ninja" or whichcharacter1 == "NINJA" or whichcharacter1 == "Ninja":
         c1 = Ninja(HP1, elusive1, delaying_heal1)
         selecting1 = False
+    elif whichcharacter1 == "cowboy" or whichcharacter1 == "COWBOY" or whichcharacter1 == "Cowboy":
+        c1 = Cowboy(HP1, delaying_heal1)
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
-    if whichcharacter2 == "knight" or whichcharacter2 == "KNIGHT":
+    if whichcharacter2 == "knight" or whichcharacter2 == "KNIGHT" or whichcharacter2 == "Knight":
         c2 = Knight(HP2)
         selecting2 = False
-    elif whichcharacter2 == "samurai" or whichcharacter2 == "SAMURAI":
+    elif whichcharacter2 == "samurai" or whichcharacter2 == "SAMURAI" or whichcharacter2 == "Samurai":
         c2 = Samurai(HP2)
         selecting2 = False
-    elif whichcharacter2 == "mage" or whichcharacter2 == "MAGE":
+    elif whichcharacter2 == "mage" or whichcharacter2 == "MAGE" or whichcharacter2 == "Mage":
         c2 = Mage(HP2, doubling2, defensive_magic2)
         selecting2 = False
-    elif whichcharacter2 == "pirate" or whichcharacter2 == "PIRATE":
+    elif whichcharacter2 == "pirate" or whichcharacter2 == "PIRATE" or whichcharacter2 == "Pirate":
         c2 = Pirate(HP2, pirate_counter2)
         selecting2 = False
-    elif whichcharacter2 == "ninja" or whichcharacter2 == "NINJA":
+    elif whichcharacter2 == "ninja" or whichcharacter2 == "NINJA" or whichcharacter2 == "Ninja":
         c2 = Ninja(HP1, elusive2, delaying_heal2)
         selecting2 = False
+    elif whichcharacter2 == "cowboy" or whichcharacter2 == "COWBOY" or whichcharacter2 == "Cowboy":
+        c2 = Cowboy(HP2, delaying_heal2)
 
 #function to clear the console
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
-
-
-
-
 
 #function for determining how turns play out
 def turn(firstmove, secondmove, character1, character2, health1, health2, punishvalue1, punishvalue2, overheal1, overheal2):
@@ -1073,8 +1074,6 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     punishvalue1+=1
     punishvalue2+=1
     return health1, health2, stun1, stun2, punishvalue1, punishvalue2
-
-    
 
 
 #while loop that lasts until the game ends
