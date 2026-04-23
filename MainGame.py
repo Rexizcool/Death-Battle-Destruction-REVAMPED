@@ -1269,6 +1269,7 @@ class Astronaut(Character):
                 self.floating = False
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
+            damage = 0
             if self.block_float == False:
                 self.floating = True
                 self.boost_counter = 0
