@@ -16,7 +16,8 @@ selecting1 = True
 selecting2 = True
 overhealing1 = False
 overhealing2 = False
-interrupt = False
+interrupting1 = False
+interrupting2 = False
 delaying_heal1 = False
 delaying_heal2 = False
 doubling1 = False
@@ -27,8 +28,8 @@ pirate_counter1 = True
 pirate_counter2 = True
 elusive1 = 0
 elusive2 = 0
-Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"]
-Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"]
+Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
+Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
 HP2 = 15
 
@@ -508,9 +509,10 @@ class Mage(Character):
             return damage, heal, stun, parrystun
 
 class Cowboy(Character):
-    def __init__(self, playerhp, delayed_heal):
+    def __init__(self, playerhp, delayed_heal, interrupts):
         self.playerhp = playerhp
         self.delayed_heal = delayed_heal
+        self.interrupts = interrupts
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
@@ -562,13 +564,11 @@ class Cowboy(Character):
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
         if self.delayed_heal == True:
             if stopheal == False:
-                heal = 2
+                heal = 1
                 self.delayed_heal = False
             else:
                 heal = 0
                 self.delayed_heal = False
-        else:
-            heal = 0
         if yourmove == "strike" or yourmove == 1:
             heal = 0
             stun = False
@@ -646,7 +646,7 @@ class Cowboy(Character):
                 damage = 1
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
-            damage = 0
+            damage = 1
             stun = False
             heal = 0
             parrystun = False
@@ -657,9 +657,11 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
         else:
             damage = 0
-            heal = 0
+            heal = random.randint(0,1)
             stun = False
             parrystun = False
+            if heal == 1:
+                print("Cowboy got lucky with his Pocket Tonic! Healed 1 HP")
             return damage, heal, stun, parrystun
 
 class Pirate(Character):
@@ -870,15 +872,6 @@ class Ninja(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
-        if self.delayed_heal == True:
-            if stopheal == False:
-                heal = 1
-                self.delayed_heal = False
-            else:
-                heal = 0
-                self.delayed_heal = False
-        else:
-            heal = 0
         if yourmove == "strike" or yourmove == 1:
             stun = False
             parrystun = False
@@ -977,6 +970,15 @@ class Ninja(Character):
                 else:
                     self.evasion = 3
                 return damage, heal, stun, parrystun
+        if self.delayed_heal == True:
+            if stopheal == False:
+                heal = 1
+                self.delayed_heal = False
+            else:
+                heal = 0
+                self.delayed_heal = False
+        else:
+            heal = 0
         else:
             damage = 0
             heal = 0
@@ -1005,6 +1007,7 @@ while selecting1 == True:
         selecting1 = False
     elif whichcharacter1 == "cowboy" or whichcharacter1 == "COWBOY" or whichcharacter1 == "Cowboy":
         c1 = Cowboy(HP1, delaying_heal1)
+        selecting1 = False
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
@@ -1025,6 +1028,7 @@ while selecting2 == True:
         selecting2 = False
     elif whichcharacter2 == "cowboy" or whichcharacter2 == "COWBOY" or whichcharacter2 == "Cowboy":
         c2 = Cowboy(HP2, delaying_heal2)
+        selecting2 = False
 
 #function to clear the console
 def clear_console():
