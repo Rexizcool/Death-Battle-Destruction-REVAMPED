@@ -859,7 +859,7 @@ class Ninja(Character):
         self.playerhp = playerhp
         self.evasion = evasion
         self.delayed_heal = delayed_heal
-        self.evasion_decay
+        self.evasion_decay = evasion_decay
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
