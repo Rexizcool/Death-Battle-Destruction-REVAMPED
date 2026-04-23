@@ -28,6 +28,8 @@ pirate_counter1 = True
 pirate_counter2 = True
 elusive1 = 0
 elusive2 = 0
+elusive_decay1 = 0
+elusive_decay2 = 0
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
@@ -84,6 +86,11 @@ class Knight(Character):
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
+            if self.playerhp <= 0:
+                bulwark = random.randint(0, 4)
+                if bulwark == 4:
+                    self.playerhp = 1
+                    print("Knight held out a little longer!")
             return self.playerhp
     def resetoverheal(self):
         overheal = False
@@ -274,6 +281,7 @@ class Samurai(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
                 damage = 1
+                stun = True
                 return damage, heal, stun, parrystun
             else:
                 return damage, heal, stun, parrystun
@@ -283,7 +291,7 @@ class Samurai(Character):
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick":
                 damage = opponentdamage+2
-                heal = 1
+                heal = 2
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge" or opponentmove == "parry" or opponentmove == "heal":
                 damage = 0
@@ -509,10 +517,9 @@ class Mage(Character):
             return damage, heal, stun, parrystun
 
 class Cowboy(Character):
-    def __init__(self, playerhp, delayed_heal, interrupts):
+    def __init__(self, playerhp, delayed_heal):
         self.playerhp = playerhp
         self.delayed_heal = delayed_heal
-        self.interrupts = interrupts
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
@@ -562,15 +569,18 @@ class Cowboy(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
+            stopheal = False
         if self.delayed_heal == True:
             if stopheal == False:
-                heal = 1
+                heal = 2
                 self.delayed_heal = False
             else:
                 heal = 0
                 self.delayed_heal = False
-        if yourmove == "strike" or yourmove == 1:
+        else:
             heal = 0
+        if yourmove == "strike" or yourmove == 1:
             stun = False
             parrystun = False
             if opponentmove == "strike":
@@ -578,14 +588,14 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "kick":
                 damage = 2
-                heal = 1
+                heal += 1
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
                 damage = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
-                heal = -1
+                heal += -1
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
                 damage = 2
@@ -596,7 +606,6 @@ class Cowboy(Character):
                 interrupt = False
                 return damage, heal, stun, parrystun
         if yourmove == "kick" or yourmove == 2:
-            heal = 0
             stun = False
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
@@ -608,13 +617,12 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
-                heal = -1
+                heal += -1
                 return damage, heal, stun, parrystun
             else:
                 damage = 1
                 return damage, heal, stun, parrystun
         if yourmove == "dodge" or yourmove == 3:
-            heal = 0
             damage = 1
             stun = False
             parrystun = False
@@ -625,12 +633,11 @@ class Cowboy(Character):
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 stun = True
-                parrystun = True
+                parrystun = False
                 return damage, heal, stun, parrystun
             else:
                 return damage, heal, stun, parrystun
         if yourmove == "parry" or yourmove == 4:
-            heal = 0
             damage = 1
             stun = False
             parrystun = False
@@ -646,18 +653,22 @@ class Cowboy(Character):
                 damage = 1
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
-            damage = 1
+            self.delayed_heal = True
+            if opponentmove != "dodge":
+                damage = 1
+            else:
+                damage = 0
             stun = False
-            heal = 0
             parrystun = False
             if stopheal == True:
+                self.delayed_heal = False
                 return damage, heal, stun, parrystun
             else:
-                delayed_heal = True
+                self.delayed_heal = True
                 return damage, heal, stun, parrystun
         else:
             damage = 0
-            heal = random.randint(0,1)
+            heal += random.randint(-1,1)
             stun = False
             parrystun = False
             if heal == 1:
@@ -814,10 +825,11 @@ class Pirate(Character):
             return damage, heal, stun, parrystun
 
 class Ninja(Character):
-    def __init__(self, playerhp, evasion, delayed_heal):
+    def __init__(self, playerhp, evasion, delayed_heal, evasion_decay):
         self.playerhp = playerhp
         self.evasion = evasion
         self.delayed_heal = delayed_heal
+        self.evasion_decay
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
@@ -872,6 +884,23 @@ class Ninja(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        if self.evasion >1:
+            self.evasion_decay +=1
+            if self.evasion_decay >= 2:
+                self.evasion -= 1
+        else:
+            self.evasion_decay = 0
+        if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
+            stopheal = False
+        if self.delayed_heal == True:
+            if stopheal == False:
+                heal = 2
+                self.delayed_heal = False
+            else:
+                heal = 0
+                self.delayed_heal = False
+        else:
+            heal = 0
         if yourmove == "strike" or yourmove == 1:
             stun = False
             parrystun = False
@@ -970,15 +999,6 @@ class Ninja(Character):
                 else:
                     self.evasion = 3
                 return damage, heal, stun, parrystun
-        if self.delayed_heal == True:
-            if stopheal == False:
-                heal = 1
-                self.delayed_heal = False
-            else:
-                heal = 0
-                self.delayed_heal = False
-        else:
-            heal = 0
         else:
             damage = 0
             heal = 0
@@ -1003,7 +1023,7 @@ while selecting1 == True:
         c1 = Pirate(HP1, pirate_counter1)
         selecting1 = False
     elif whichcharacter1 == "ninja" or whichcharacter1 == "NINJA" or whichcharacter1 == "Ninja":
-        c1 = Ninja(HP1, elusive1, delaying_heal1)
+        c1 = Ninja(HP1, elusive1, delaying_heal1, elusive_decay1)
         selecting1 = False
     elif whichcharacter1 == "cowboy" or whichcharacter1 == "COWBOY" or whichcharacter1 == "Cowboy":
         c1 = Cowboy(HP1, delaying_heal1)
@@ -1024,7 +1044,7 @@ while selecting2 == True:
         c2 = Pirate(HP2, pirate_counter2)
         selecting2 = False
     elif whichcharacter2 == "ninja" or whichcharacter2 == "NINJA" or whichcharacter2 == "Ninja":
-        c2 = Ninja(HP1, elusive2, delaying_heal2)
+        c2 = Ninja(HP1, elusive2, delaying_heal2, elusive_decay2)
         selecting2 = False
     elif whichcharacter2 == "cowboy" or whichcharacter2 == "COWBOY" or whichcharacter2 == "Cowboy":
         c2 = Cowboy(HP2, delaying_heal2)
