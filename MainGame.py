@@ -1144,14 +1144,14 @@ class Astronaut(Character):
                     damage = 1
                     heal += 1 
             self.boost_counter += 1
-                if self.boost_counter >= 2 and self.block_float != True:
-                    if self.block_float == False:
-                        self.floating = True
-                        self.boost_counter = 0
-                    else:
-                        self.floating = False
-                        self.block_float = False
+            if self.boost_counter >= 2 and self.block_float != True:
+                if self.block_float == False:
+                    self.floating = True
                     self.boost_counter = 0
+                else:
+                    self.floating = False
+                    self.block_float = False
+                self.boost_counter = 0
             if opponentmove == "strike" or opponentmove == "kick":
                 damage += 2
                 return damage, heal, stun, parrystun
@@ -1195,9 +1195,9 @@ class Astronaut(Character):
                 if self.block_float == False:
                     self.floating = True
                     self.boost_counter = 0
-                    else:
-                        self.floating = False
-                        self.block_float = False
+                else:
+                    self.floating = False
+                    self.block_float = False
                 self.boost_counter = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "kick":
@@ -1205,7 +1205,7 @@ class Astronaut(Character):
                     heal -= 1
                 self.floating = False
                 return damage, heal, stun, parrystun
-            elif opponentmove == "dodge" or opponentmove == "heal""
+            elif opponentmove == "dodge" or opponentmove == "heal":
                 self.boost_counter = 0
                 if self.block_float == False:
                     self.floating = True
