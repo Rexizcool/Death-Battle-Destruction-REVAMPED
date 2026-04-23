@@ -32,6 +32,14 @@ elusive1 = 0
 elusive2 = 0
 elusive_decay1 = 0
 elusive_decay2 = 0
+float1 = False
+float2 = False
+jetpack1 = False
+jetpack2 = False
+float_decay1 = 2
+float_decay2 = 2
+no_float1 = False
+no_float2 = False
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
@@ -1307,6 +1315,9 @@ while selecting1 == True:
     elif whichcharacter1 == "cowboy" or whichcharacter1 == "COWBOY" or whichcharacter1 == "Cowboy":
         c1 = Cowboy(HP1, delaying_heal1)
         selecting1 = False
+    elif whichcharacter1 == "astronaut" or whichcharacter1 == "ASTRONAUT" or whichcharacter1 == "Astronaut":
+        c1 = Astronaut(HP1, delaying_heal1, float1, jetpack1, float_decay1, no_float1)
+        selecting1 = False
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
@@ -1327,6 +1338,9 @@ while selecting2 == True:
         selecting2 = False
     elif whichcharacter2 == "cowboy" or whichcharacter2 == "COWBOY" or whichcharacter2 == "Cowboy":
         c2 = Cowboy(HP2, delaying_heal2)
+        selecting2 = False
+    elif whichcharacter2 == "astronaut" or whichcharacter2 == "ASTRONAUT" or whichcharacter2 == "Astronaut":
+        c2 = Astronaut(HP2, delaying_heal2, float2, jetpack2, float_decay2, no_float2)
         selecting2 = False
 
 #function to clear the console
