@@ -1106,7 +1106,6 @@ class Astronaut(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
-        self.block_float = False
         if self.float_timer == 0:
             self.floating = False
             self.block_float = True
