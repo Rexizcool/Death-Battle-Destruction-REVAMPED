@@ -2,18 +2,19 @@ from MainGame.py import Knight, Samurai, Mage, Cowboy, Pirate, Ninja, turn
 
 testHP = 15
 test_elusive = 0
+test_delaying_heal = False
 
 
 test_knight = Knight(testHP)
 
-test_ninja = Ninja(testHP, )
+test_ninja = Ninja(testHP, test_delaying_heal)
 
 test_damage = 2
 
 test_healing = 1
 
-#def test_take_damage():
-    #assert test_knight.takedamage(test_damage, test_healing) == 14
+def test_take_damage():
+    assert test_knight.takedamage(test_damage, test_healing) == 14
 
 #def finish_game():
     #return
@@ -24,3 +25,6 @@ test_healing = 1
     #finish_game()
     #ending_length = game_results.shape()[0]
     #assert ending_length - starting_length == 1
+
+def test_ninja_elusive():
+

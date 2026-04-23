@@ -586,8 +586,13 @@ class Cowboy(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
-        if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
-            stopheal = False
+        if stopheal == True:
+            if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
+                stopheal = False
+            elif opponentmove == "kick" and yourmove == "parry":
+                stopheal = False
+            elif opponentmove == "dodge" and (yourmove == "strike" or yourmove == "kick" or yourmove == "dodge"):
+                stopheal = False
         if self.delayed_heal == True:
             if stopheal == False:
                 heal = 2
@@ -907,8 +912,13 @@ class Ninja(Character):
                 self.evasion -= 1
         else:
             self.evasion_decay = 0
-        if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
-            stopheal = False
+        if stopheal == True:
+            if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
+                stopheal = False
+            elif opponentmove == "kick" and yourmove == "parry":
+                stopheal = False
+            elif opponentmove == "dodge" and (yourmove == "strike" or yourmove == "kick" or yourmove == "dodge"):
+                stopheal = False
         if self.delayed_heal == True:
             if stopheal == False:
                 heal = 2
@@ -1024,16 +1034,22 @@ class Ninja(Character):
             return damage, heal, stun, parrystun
 
 class Astronaut(Character):
-    def __init__(self, playerhp, delayed_heal, floating):
+    def __init__(self, playerhp, delayed_heal, floating, boost_counter, float_timer, block_float):
         self.playerhp = playerhp
         self.delayed_heal = delayed_heal
-        self.floating
+        self.floating = floating
+        self.boost_counter = boost_counter
+        self.float_timer = float_timer
+        self.block_float = block_float
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
         if move == "strike":
             damage = 2
-            interrupt = False
+            if self.floating == True:
+                interrupt = True
+            else:
+                interrupt = False
             heal = 0
             movetype = "striketype"
             return damage, interrupt, heal, movetype
@@ -1046,7 +1062,10 @@ class Astronaut(Character):
         if move == "dodge":
             damage = 0
             interrupt = False
-            heal = 0
+            if self.floating == True:
+                heal = 1
+            else:
+                heal = 0
             movetype = "dodgetype"
             return damage, interrupt, heal, movetype
         if move == "parry":
@@ -1058,7 +1077,10 @@ class Astronaut(Character):
         if move == "heal":
             damage = 0
             interrupt = False
-            heal = 1
+            if self.floating == True:
+                heal = 2
+            else:
+                heal = 1
             movetype = "healtype"
             return damage, interrupt, heal, movetype
         else:
@@ -1068,8 +1090,15 @@ class Astronaut(Character):
             movetype = "nothing"
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
+        if self.floating == True:
+            if damagetaken > 2:
+                damagetaken = 2
+                self.playerhp = (self.playerhp) + healingtaken - damagetaken
+            else:
+                self.playerhp = (self.playerhp) + healingtaken - damagetaken
+        else:
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
-            return self.playerhp
+        return self.playerhp
     def resetoverheal(self):
         overheal = False
         if self.playerhp > 15:
@@ -1077,40 +1106,55 @@ class Astronaut(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
-        if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
-            stopheal = False
+        self.block_float = False
+        if self.float_timer == 0:
+            self.floating = False
+            self.block_float = True
+        if stopheal == True:
+            if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
+                stopheal = False
+            elif opponentmove == "kick" and yourmove == "parry":
+                stopheal = False
+            elif opponentmove == "dodge" and (yourmove == "strike" or yourmove == "kick" or yourmove == "dodge"):
+                stopheal = False
         if self.delayed_heal == True:
             if stopheal == False:
-                heal = 2
+                heal = 1
                 self.delayed_heal = False
             else:
                 heal = 0
                 self.delayed_heal = False
         else:
             heal = 0
+        if self.floating == True:
+            self.float_timer -= 1
         if yourmove == "strike" or yourmove == 1:
+            damage = 0
             stun = False
             parrystun = False
-            if opponentmove == "strike":
-                damage = 2
-                return damage, heal, stun, parrystun
-            elif opponentmove == "kick":
-                damage = 2
-                heal += 1
+            if self.floating == True:
+                if opponentdamage >= 1:
+                    damage = 1
+                    heal += 1 
+            self.boost_counter += 1
+                if self.boost_counter >= 2 and self.block_float != True:
+                    self.floating = True
+                    self.boost_counter = 0
+            if opponentmove == "strike" or opponentmove == "kick":
+                damage += 2
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
                 damage = 0
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
-                heal += -1
                 return damage, heal, stun, parrystun
             elif opponentmove == "heal":
-                damage = 2
+                damage += 2
                 interrupt = True
                 return damage, heal, stun, parrystun
             else:
-                damage = 2
+                damage += 2
                 interrupt = False
                 return damage, heal, stun, parrystun
         if yourmove == "kick" or yourmove == 2:
@@ -1118,69 +1162,96 @@ class Astronaut(Character):
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick" or opponentmove == "heal":
                 damage = 1
-                interrupt = True
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge":
-                damage = 2
+                damage = 3
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
                 damage = 0
-                heal += -1
                 return damage, heal, stun, parrystun
             else:
                 damage = 1
                 return damage, heal, stun, parrystun
         if yourmove == "dodge" or yourmove == 3:
-            damage = 1
+            damage = 0
             stun = False
             parrystun = False
+            if self.floating == True:
+                heal += 1
             if opponentmove == "strike":
                 stun = True
+                self.floating = True
+                self.boost_counter = 0
                 return damage, heal, stun, parrystun
-            elif opponentmove == "dodge" or opponentmove == "heal" or opponentmove == "kick":
+            elif opponentmove == "kick":
+                if self.floating = True:
+                    heal -= 1
+                self.floating = False
+                return damage, heal, stun, parrystun
+            elif opponentmove == "dodge" or opponentmove == "heal""
+                self.boost_counter = 0
+                self.floating = True
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry":
-                stun = True
+                stun = False
                 parrystun = False
+                if self.floating == True:
+                    stun = True
+                    parrystun = True
+                self.floating = True
+                self.boost_counter = 0
                 return damage, heal, stun, parrystun
             else:
+                self.boost_counter = 0
+                self.floating = True
                 return damage, heal, stun, parrystun
         if yourmove == "parry" or yourmove == 4:
-            damage = 1
+            damage = 0
             stun = False
             parrystun = False
             if opponentmove == "strike" or opponentmove == "kick":
-                damage = 2
+                damage = opponentdamage+1
+                self.boost_counter += 1
+                if self.boost_counter >= 2 and self.block_float != True:
+                    self.floating = True
+                    self.boost_counter = 0
+                if self.floating == True:
+                    damage = opponentdamage+4
+                    heal = -1
+                    self.floating = False
+                    self.boost_counter = 0
+                    self.block_float = True
                 return damage, heal, stun, parrystun
             elif opponentmove == "dodge": 
                 damage = 0
+                self.floating = False
                 return damage, heal, stun, parrystun
             elif opponentmove == "parry" or opponentmove == "heal":
+                self.floating = False
                 return damage, heal, stun, parrystun
-            else:
-                damage = 1
-                return damage, heal, stun, parrystun
-        if yourmove == "heal" or yourmove == 5:
-            self.delayed_heal = True
-            if opponentmove != "dodge":
-                damage = 1
             else:
                 damage = 0
+                self.floating = False
+                return damage, heal, stun, parrystun
+        if yourmove == "heal" or yourmove == 5:
+            self.floating = True
+            self.delayed_heal = True
             stun = False
             parrystun = False
             if stopheal == True:
                 self.delayed_heal = False
+                heal = 0
+                self.floating = False
                 return damage, heal, stun, parrystun
             else:
                 self.delayed_heal = True
+                heal = 1
                 return damage, heal, stun, parrystun
         else:
             damage = 0
-            heal += random.randint(-1,1)
+            heal = 0
             stun = False
             parrystun = False
-            if heal == 1:
-                print("Cowboy got lucky with his Pocket Tonic! Healed 1 HP")
             return damage, heal, stun, parrystun
 
 #while loops for selecting characters at the start of the game
