@@ -1279,25 +1279,34 @@ class Astronaut(Character):
                 return damage, heal, stun, parrystun
         if yourmove == "heal" or yourmove == 5:
             damage = 0
-            if self.block_float == False:
-                self.floating = True
-                print("Astronaut is now floating!")
+            if self.floating == True:
+                heal = 2
+                self.floating = False
                 self.boost_counter = 0
-            else:
-                self.floating = False
-                self.block_float = False
-            self.delayed_heal = True
-            stun = False
-            parrystun = False
-            if stopheal == True:
-                self.delayed_heal = False
-                heal = 0
-                self.floating = False
+                self.bloc_float = True
+                stun = 0
+                parrystun = 0
                 return damage, heal, stun, parrystun
             else:
+                if self.block_float == False:
+                    self.floating = True
+                    print("Astronaut is now floating!")
+                    self.boost_counter = 0
+                else:
+                    self.floating = False
+                    self.block_float = False
                 self.delayed_heal = True
-                heal = 1
-                return damage, heal, stun, parrystun
+                stun = False
+                parrystun = False
+                if stopheal == True:
+                    self.delayed_heal = False
+                    heal = 0
+                    self.floating = False
+                    return damage, heal, stun, parrystun
+                else:
+                    self.delayed_heal = True
+                    heal = 1
+                    return damage, heal, stun, parrystun
         else:
             damage = 0
             heal = 0
