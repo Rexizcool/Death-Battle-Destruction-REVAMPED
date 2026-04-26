@@ -1118,7 +1118,7 @@ class Astronaut(Character):
         if self.float_timer == 0:
             self.floating = False
             self.block_float = True
-            self.float_timer = 2
+            self.float_timer = 3
         if stopheal == True:
             if opponentmove == "strike" and (yourmove == "dodge" or yourmove == "parry"):
                 stopheal = False
@@ -1197,9 +1197,10 @@ class Astronaut(Character):
             if opponentmove == "strike":
                 stun = True
                 if self.block_float == False:
-                    self.floating = True
-                    print("Astronaut is now floating!")
-                    self.boost_counter = 0
+                    if self.floating != True:
+                        print("Astronaut is now floating!")
+                        self.floating = True
+                        self.boost_counter = 0
                 else:
                     self.floating = False
                     self.block_float = False
