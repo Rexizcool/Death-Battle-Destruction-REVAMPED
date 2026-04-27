@@ -23,6 +23,8 @@ delaying_heal1 = False
 delaying_heal2 = False
 bulwark1 = 0
 bulwark2 = 0
+demonic_rage1 = 0
+demonic_rage2 = 0
 doubling1 = False
 doubling2 = False
 defensive_magic1 = False
@@ -41,6 +43,8 @@ float_decay1 = 2
 float_decay2 = 2
 no_float1 = False
 no_float2 = False
+boating1 = False
+boating2 = False
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
@@ -209,8 +213,9 @@ class Knight(Character):
             return damage, heal, stun, parrystun
     
 class Samurai(Character):
-    def __init__(self, playerhp):
+    def __init__(self, playerhp, rage):
         self.playerhp = playerhp
+        self.rage = rage
     def help(self):
         print("MOVES: \n Slash - Deals 2 damage, deals 3 damage if you take damage on the same turn, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nShoulder Bash - Counters Parry and Heal. Breaks through Parry, granting an extra turn and +2 damage to any attacks done during said turn. Interrupts and deals 1 damage against Heal (DODGE type)\n Warrior's Parry - Counters any attacks, returning the attack with an extra +2 damage and healing for 1 HP (PARRY type)")
     def moveinfo(self, move):
@@ -311,7 +316,7 @@ class Samurai(Character):
                 return damage, heal, stun, parrystun
             else:
                 return damage, heal, stun, parrystun
-        if yourmove == "parry" or yourmove == 4:
+        elif yourmove == "parry" or yourmove == 4:
             heal = 0
             stun = False
             parrystun = False
@@ -330,6 +335,7 @@ class Samurai(Character):
             heal = 0
             stun = False
             parrystun = False
+            self.rage += 1
             return damage, heal, stun, parrystun
 
 class Mage(Character):
@@ -1043,13 +1049,14 @@ class Ninja(Character):
             return damage, heal, stun, parrystun
 
 class Astronaut(Character):
-    def __init__(self, playerhp, delayed_heal, floating, boost_counter, float_timer, block_float):
+    def __init__(self, playerhp, delayed_heal, floating, boost_counter, float_timer, block_float, float_firstturn):
         self.playerhp = playerhp
         self.delayed_heal = delayed_heal
         self.floating = floating
         self.boost_counter = boost_counter
         self.float_timer = float_timer
         self.block_float = block_float
+        self.float_firstturn = float_firstturn
     def help(self):
         print("MOVES: \n Strike - Deals 2 damage, interrupts Heal (STRIKE type)\n Kick - Deals 1 damage, deals 3 damage against Dodge (KICK type)\nDodge - Counters Strike and Parry. Causes Strike to miss, granting an extra turn if dodged. Causes Parry to miss, granting an extra turn and +2 damage to any attacks done during said turn (DODGE type)\n Parry - Counters any attacks, returning the attack with an extra +2 damage (PARRY type)\n Heal - Heals for 2 HP (HEAL type)")
     def moveinfo(self, move):
@@ -1099,7 +1106,7 @@ class Astronaut(Character):
             movetype = "nothing"
             return damage, interrupt, heal, movetype
     def takedamage(self, damagetaken, healingtaken):
-        if self.floating == True:
+        if self.floating == True and self.float_firstturn == False:
             if damagetaken > 2:
                 damagetaken = 2
                 self.playerhp = (self.playerhp) + healingtaken - damagetaken
@@ -1115,6 +1122,7 @@ class Astronaut(Character):
             overheal = True
         return overheal
     def doturn(self, yourmove, opponentmove, opponentdamage, stopheal):
+        self.float_firstturn = False
         if self.float_timer == 0:
             self.floating = False
             self.block_float = True
@@ -1132,6 +1140,7 @@ class Astronaut(Character):
                 self.delayed_heal = False
                 if self.block_float == False:
                     self.floating = True
+                    self.float_firstturn = True
                     print("Astronaut is now floating!")
                     self.boost_counter = 0
             else:
@@ -1155,6 +1164,7 @@ class Astronaut(Character):
                     if self.floating != True:
                         print("Astronaut is now floating!")
                     self.floating = True
+                    self.float_firstturn = True
                     self.boost_counter = 0
                 else:
                     self.floating = False
@@ -1204,6 +1214,7 @@ class Astronaut(Character):
                     if self.floating != True:
                         print("Astronaut is now floating!")
                         self.floating = True
+                        self.float_firstturn = True
                         self.boost_counter = 0
                 else:
                     self.floating = False
@@ -1219,6 +1230,7 @@ class Astronaut(Character):
                 self.boost_counter = 0
                 if self.block_float == False:
                     self.floating = True
+                    self.float_firstturn = True
                     print("Astronaut is now floating!")
                     self.boost_counter = 0
                 else:
@@ -1233,6 +1245,7 @@ class Astronaut(Character):
                     parrystun = True
                 if self.block_float == False:
                     self.floating = True
+                    self.float_firstturn = True
                     print("Astronaut is now floating!")
                     self.boost_counter = 0
                 else:
@@ -1243,6 +1256,7 @@ class Astronaut(Character):
             else:
                 if self.block_float == False:
                     self.floating = True
+                    self.float_firstturn = True
                     print("Astronaut is now floating!")
                     self.boost_counter = 0
                 else:
@@ -1266,6 +1280,7 @@ class Astronaut(Character):
                     if self.boost_counter >= 2 and self.block_float != True:
                         if self.block_float == False:
                             self.floating = True
+                            self.float_firstturn = True
                             print("Astronaut is now floating!")
                             self.boost_counter = 0
                         else:
@@ -1320,7 +1335,7 @@ while selecting1 == True:
         c1 = Knight(HP1, bulwark1)
         selecting1 = False
     elif whichcharacter1 == "samurai" or whichcharacter1 == "SAMURAI" or whichcharacter1 == "Samurai":
-        c1 = Samurai(HP1)
+        c1 = Samurai(HP1, demonic_rage1)
         selecting1 = False
     elif whichcharacter1 == "mage" or whichcharacter1 == "MAGE" or whichcharacter1 == "Mage":
         c1 = Mage(HP1, doubling1, defensive_magic1)
@@ -1335,7 +1350,7 @@ while selecting1 == True:
         c1 = Cowboy(HP1, delaying_heal1)
         selecting1 = False
     elif whichcharacter1 == "astronaut" or whichcharacter1 == "ASTRONAUT" or whichcharacter1 == "Astronaut":
-        c1 = Astronaut(HP1, delaying_heal1, float1, jetpack1, float_decay1, no_float1)
+        c1 = Astronaut(HP1, delaying_heal1, float1, jetpack1, float_decay1, no_float1, boating1)
         selecting1 = False
 
 while selecting2 == True:
@@ -1344,7 +1359,7 @@ while selecting2 == True:
         c2 = Knight(HP2, bulwark2)
         selecting2 = False
     elif whichcharacter2 == "samurai" or whichcharacter2 == "SAMURAI" or whichcharacter2 == "Samurai":
-        c2 = Samurai(HP2)
+        c2 = Samurai(HP2, demonic_rage2)
         selecting2 = False
     elif whichcharacter2 == "mage" or whichcharacter2 == "MAGE" or whichcharacter2 == "Mage":
         c2 = Mage(HP2, doubling2, defensive_magic2)
@@ -1359,7 +1374,7 @@ while selecting2 == True:
         c2 = Cowboy(HP2, delaying_heal2)
         selecting2 = False
     elif whichcharacter2 == "astronaut" or whichcharacter2 == "ASTRONAUT" or whichcharacter2 == "Astronaut":
-        c2 = Astronaut(HP2, delaying_heal2, float2, jetpack2, float_decay2, no_float2)
+        c2 = Astronaut(HP2, delaying_heal2, float2, jetpack2, float_decay2, no_float2, boating2)
         selecting2 = False
 
 #function to clear the console
