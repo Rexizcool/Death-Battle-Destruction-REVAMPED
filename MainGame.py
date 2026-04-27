@@ -1271,9 +1271,9 @@ class Astronaut(Character):
                 if self.floating == True:
                     damage = opponentdamage+4
                     heal = -1
+                    self.float_timer = 0
                     self.floating = False
                     self.boost_counter = 0
-                    self.block_float = True
                 else:
                     damage = opponentdamage+1
                     self.boost_counter += 1
@@ -1304,7 +1304,8 @@ class Astronaut(Character):
                 heal = 2
                 self.floating = False
                 self.boost_counter = 0
-                self.bloc_float = True
+                self.block_float = True
+                self.float_timer = 0
                 stun = 0
                 parrystun = 0
                 return damage, heal, stun, parrystun
