@@ -4,6 +4,7 @@ import matplotlib as plt
 import pytest
 import os
 import random
+import git
 from git import Repo
 
 #initializing variables
@@ -1424,13 +1425,13 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     print(f"Player 1 used {firstmove}")
     print(f"Player 2 used {secondmove}")
     if healthdifference1 >= 0:
-        print(f"Player 1 took {healthdifference1} damage")
+        print(f"Player 1 took {abs(healthdifference1)} damage")
     else:
-        print(f"Player 1 healed for {healthdifference1} HP")
+        print(f"Player 1 healed for {abs(healthdifference1)} HP")
     if healthdifference2 >= 0:
         print(f"Player 2 took {healthdifference2} damage")
     else:
-        print(f"Player 2 healed for {healthdifference2} HP")
+        print(f"Player 2 healed for {abs(healthdifference2)} HP")
     print(f"Player 1 HP: {endinghealth1}")
     print(f"Player 2 HP: {endinghealth2}")
     punishvalue1+=1
@@ -1476,11 +1477,11 @@ while gameend == False:
 
     if HP1 <= 0 and HP2 > 0:
         print("Player 2 wins!!")
-        #df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter2], 'Losing Character': [whichcharacter1]})
+        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter2], 'Losing Character': [whichcharacter1]})
         gameend = True
     elif HP1 > 0 and HP2 <= 0:
         print("Player 1 wins!!")
-        #df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter1], 'Losing Character': [whichcharacter2]})
+        df_append_gameresults = pd.DataFrame({'Winning Character': [whichcharacter1], 'Losing Character': [whichcharacter2]})
         gameend = True
     elif HP1 <= 0 and HP2 <= 0:
         print("No one wins, you both suck")
@@ -1489,12 +1490,11 @@ while gameend == False:
 
 
 
-#df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
+df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
 
-
-#repo_path = 'https://github.com/Rexizcool/Death-Battle-Destruction-REVAMPED'
-#repo = Repo(repo_path)
-#repo.git.add(update=True)
-#repo.index.commit("Added game results")
-#origin = repo.remote(name='origin')
-#repo.git.push('origin', 'main', force=True) 
+repo_path = '/workspaces/Death-Battle-Destruction-REVAMPED'
+repo = Repo(repo_path)
+repo.git.add(update=True)
+repo.index.commit("Added game results")
+origin = repo.remote(name='origin')
+repo.git.push('origin', 'main', force=True) 
