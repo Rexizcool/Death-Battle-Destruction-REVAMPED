@@ -1137,11 +1137,11 @@ class Astronaut(Character):
             if stopheal == False:
                 heal = 1
                 self.delayed_heal = False
-                    if self.floating != True:
-                        self.floating = True
-                        self.float_firstturn = True
-                        print("Astronaut is now floating!")
-                        self.boost_counter = 0
+                if self.floating != True:
+                    self.floating = True
+                    self.float_firstturn = True
+                    print("Astronaut is now floating!")
+                    self.boost_counter = 0
             else:
                 heal = 0
                 self.delayed_heal = False
@@ -1235,7 +1235,7 @@ class Astronaut(Character):
                 if self.floating == True:
                     stun = True
                     parrystun = True
-                if self.floating != True
+                if self.floating != True:
                     self.floating = True
                     self.float_firstturn = True
                     print("Astronaut is now floating!")
@@ -1245,7 +1245,7 @@ class Astronaut(Character):
                 
                 return damage, heal, stun, parrystun
             else:
-                if self.floating != True
+                if self.floating != True:
                     self.floating = True
                     self.float_firstturn = True
                     print("Astronaut is now floating!")
@@ -1268,7 +1268,7 @@ class Astronaut(Character):
                     damage = opponentdamage+1
                     self.boost_counter += 1
                     if self.boost_counter >= 2:
-                        if self.floating != True
+                        if self.floating != True:
                             self.floating = True
                             self.float_firstturn = True
                             print("Astronaut is now floating!")
