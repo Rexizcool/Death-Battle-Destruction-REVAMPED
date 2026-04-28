@@ -28,3 +28,17 @@ def test_take_damage():
 
 def test_ninja_elusive():
 
+def test_delaying_heal():
+
+#test astronaut float
+
+#test samuria Bushido Code
+
+#test samuria Demonic rage
+
+#test knights bulwark
+
+#test Pirate battle hardened
+
+
+
