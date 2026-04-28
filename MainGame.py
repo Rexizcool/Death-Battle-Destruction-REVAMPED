@@ -1348,6 +1348,8 @@ while selecting1 == True:
     elif whichcharacter1 == "astronaut" or whichcharacter1 == "ASTRONAUT" or whichcharacter1 == "Astronaut":
         c1 = Astronaut(HP1, delaying_heal1, float1, jetpack1, float_decay1, no_float1, boating1)
         selecting1 = False
+    else:
+        print("Sorry, that is not a valid character. Please make sure you typed your character's name correctly before continuing.")
 
 while selecting2 == True:
     whichcharacter2 = input("---------- PLAYER 2 : SELECT CHARACTER ----------\nKNIGHT\nSAMURAI\nMAGE\nCOWBOY\nPIRATE\nNINJA\nASTRONAUT\nCOPYCAT\n ")
@@ -1372,6 +1374,8 @@ while selecting2 == True:
     elif whichcharacter2 == "astronaut" or whichcharacter2 == "ASTRONAUT" or whichcharacter2 == "Astronaut":
         c2 = Astronaut(HP2, delaying_heal2, float2, jetpack2, float_decay2, no_float2, boating2)
         selecting2 = False
+    else:
+        print("Sorry, that is not a valid character. Please make sure you typed your character's name correctly before continuing.")
 
 #function to clear the console
 def clear_console():
@@ -1405,22 +1409,33 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
         punishvalue2+=2
 
     
-    health1 = character1.takedamage(damage2, heal1)
-    health2 = character2.takedamage(damage1, heal2)
+    endinghealth1 = character1.takedamage(damage2, heal1)
+    endinghealth2 = character2.takedamage(damage1, heal2)
     overheal1 = character1.resetoverheal()
     overheal2 = character2.resetoverheal()
-    
+
+    healthdifference1 = health1 - endinghealth1
+    healthdifference2 = health2 - endinghealth2
 
     if stun1 == True:
         print("Player 1 is vulnerable!")
     if stun2 == True:
         print("Player 2 is vulnerable!")
-    print(f"Player 1 used {firstmove} and did {damage1} damage")
-    print(f"Player 2 used {secondmove} and did {damage2} damage")
-    print(f"Player 1 HP: {health1}\nPlayer 2 HP: {health2}")
+    print(f"Player 1 used {firstmove}")
+    print(f"Player 2 used {secondmove}")
+    if healthdifference1 >= 0:
+        print(f"Player 1 took {healthdifference1} damage")
+    else:
+        print(f"Player 1 healed for {healthdifference1} HP")
+    if healthdifference2 >= 0:
+        print(f"Player 2 took {healthdifference2} damage")
+    else:
+        print(f"Player 2 healed for {healthdifference2} HP")
+    print(f"Player 1 HP: {endinghealth1}")
+    print(f"Player 2 HP: {endinghealth2}")
     punishvalue1+=1
     punishvalue2+=1
-    return health1, health2, stun1, stun2, punishvalue1, punishvalue2
+    return endinghealth1, endinghealth2, stun1, stun2, punishvalue1, punishvalue2
 
 
 #while loop that lasts until the game ends
@@ -1475,3 +1490,11 @@ while gameend == False:
 
 
 #df_append_gameresults.to_csv('gameresults.csv', mode='a', index=False, header = False)
+
+
+#repo_path = 'https://github.com/Rexizcool/Death-Battle-Destruction-REVAMPED'
+#repo = Repo(repo_path)
+#repo.git.add(update=True)
+#repo.index.commit("Added game results")
+#origin = repo.remote(name='origin')
+#repo.git.push('origin', 'main', force=True) 
