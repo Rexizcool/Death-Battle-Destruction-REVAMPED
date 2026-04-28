@@ -104,7 +104,7 @@ class Knight(Character):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             if self.playerhp <= 0:
                 if self.undying == 0:
-                    bulwark = random.randint(0, 21
+                    bulwark = 1
                     if bulwark == 1:
                         self.playerhp = 1
                         self.undying+=1
