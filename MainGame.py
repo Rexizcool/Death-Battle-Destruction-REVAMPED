@@ -104,23 +104,30 @@ class Knight(Character):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             if self.playerhp <= 0:
                 if self.undying == 0:
+                    bulwark = random.randint(0, 21
+                    if bulwark == 1:
+                        self.playerhp = 1
+                        self.undying+=1
+                        print("Knight held out a little longer!")
+                elif self.undying == 1:
                     bulwark = random.randint(0, 2)
                     if bulwark == 2:
                         self.playerhp = 1
                         self.undying+=1
                         print("Knight held out a little longer!")
-                elif self.undying == 1:
+                elif self.undying == 2:
                     bulwark = random.randint(0, 4)
                     if bulwark == 4:
                         self.playerhp = 1
                         self.undying+=1
                         print("Knight held out a little longer!")
-                elif self.undying >= 2:
+                elif self.undying >= 3:
                     bulwark = random.randint(0, 10)
                     if bulwark == 10:
                         self.playerhp = 1
                         self.undying+=1
                         print("Knight held out a little longer!")
+                        
             return self.playerhp
     def resetoverheal(self):
         overheal = False
