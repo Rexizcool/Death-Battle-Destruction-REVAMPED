@@ -7,8 +7,7 @@ import random
 import git
 from git import Repo
 
-if playername == "Theo":
-    player = banned
+
 
 #initializing variables
 moveselect = True
