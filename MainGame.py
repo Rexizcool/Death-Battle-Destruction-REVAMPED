@@ -103,6 +103,8 @@ class Knight(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+    
+
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             if self.playerhp <= 0:
@@ -259,6 +261,7 @@ class Samurai(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             return self.playerhp
@@ -392,6 +395,8 @@ class Mage(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+    
+
     def takedamage(self, damagetaken, healingtaken):
             if self.defense_magic == True:
                 if damagetaken>=1:
@@ -601,6 +606,8 @@ class Cowboy(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+    
+
     def takedamage(self, damagetaken, healingtaken):
             self.playerhp = (self.playerhp) + healingtaken - damagetaken
             return self.playerhp
@@ -765,6 +772,8 @@ class Pirate(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+    
+
     def takedamage(self, damagetaken, healingtaken):
             if self.counter == False:
                 self.playerhp = (self.playerhp) + healingtaken - damagetaken
@@ -916,6 +925,8 @@ class Ninja(Character):
             heal = 0
             movetype = "nothing"
             return damage, interrupt, heal, movetype
+    
+
     def takedamage(self, damagetaken, healingtaken):
         if self.evasion <= damagetaken:
                 self.playerhp = (self.playerhp) + healingtaken - (damagetaken - self.evasion)
