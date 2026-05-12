@@ -16,7 +16,7 @@
     [Heal]
         [Heals 2 Damage]
 
-[the Samurai] [The Honored Warrior]
+[The Samurai] [The Honored Warrior]
     [Passive]
         [Demonic Rage: Activated after getting Stunned twice. Next Strike does +1 Damage and goes through Parry]
     [Slash: Strike]

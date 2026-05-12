@@ -48,6 +48,7 @@ no_float1 = False
 no_float2 = False
 boating1 = False
 boating2 = False
+admin = False
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
 Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
@@ -1362,6 +1363,10 @@ while selecting1 == True:
     elif whichcharacter1 == "astronaut" or whichcharacter1 == "ASTRONAUT" or whichcharacter1 == "Astronaut":
         c1 = Astronaut(HP1, delaying_heal1, float1, jetpack1, float_decay1, no_float1, boating1)
         selecting1 = False
+    elif whichcharacter1 == "admin":
+        admin = True
+        gameend = False
+        print("Admin granted.")
     else:
         print("Sorry, that is not a valid character. Please make sure you typed your character's name correctly before continuing.")
 
