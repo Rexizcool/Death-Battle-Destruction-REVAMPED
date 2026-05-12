@@ -33,4 +33,9 @@
             [Doubling is Mages signature ability, in which Mage creates clones which boost its moves.]
             [Effects:]
                 [Staff Strike: +2 Damage]
-                []
+                [Vine Grab: +1 Damage & Stun an extra turn when catching Dodge]
+                [Arcane Barrier: +1 Damage]
+                [Heal Spell: +1 Healed]
+        [Staff Strike: Deals 1 Damage, Interupts Heal]
+        [Vine Grab: 0 Damage , Stun an extra turn when catching Dodge]
+
