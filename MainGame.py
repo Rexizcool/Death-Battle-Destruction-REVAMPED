@@ -8,7 +8,7 @@ import random
 import git
 from git import Repo
 
-
+print("Welcome to DBD:R! If you're confused or want to look at the rules, read 'Intro.md' or read 'Champion movesets.md' if you want to look at the different characters!")
 
 #initializing variables
 moveselect = True
@@ -1506,28 +1506,28 @@ while gameend == False:
     moveselect = True
     while moveselect == True:
         if playerstun1 == False:
-            move1 = input("Player 1, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
+            move1 = input("Player 1, it is your turn. What would you like to do? (hint: check 'Champion movesets.md' to see what your options are!) ")
             if move1 in Moves:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 moveselect = False
             elif move1 == "help":
                 c1.help()
             else:
-                print("Sorry, that is not a valid move.")
+                print("Sorry, that is not a valid move (make sure you type in your input in lowercase as the TYPE of the move you want to use!) ")
         else:
             move1 = "stunned"
             moveselect = False
     moveselect = True
     while moveselect == True:
         if playerstun2 == False:
-            move2 = input("Player 2, it is your turn. What would you like to do? (type 'help' for a list of commands/moves!)  ")
+            move2 = input("Player 2, it is your turn. What would you like to do? (hint: check 'Champion movesets.md' to see what your options are!) ")
             if move2 in Moves:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 moveselect = False
             elif move2 == "help":
                 c2.help()
             else:
-                print("Sorry, that is not a valid move.")
+                print("Sorry, that is not a valid move (make sure you type in your input in lowercase as the TYPE of the move you want to use!) ")
         else:
             move2 = "stunned"
             moveselect = False
