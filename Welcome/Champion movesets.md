@@ -3,7 +3,7 @@
 
 [The Knight] [The standard champion, simple but mighty]
     [Passive]
-        [Bulwark: 75% chance to survive a hit that would normally kill you. Chances reduce to 50%, then 25%, then 10% after consecutive Bulwark procs. Heal only heals for 1 HP once Bulwark procs.]
+        [Bulwark: 100% chance to survive a hit that would normally kill you. Chances reduce to 50%, then 25%, then 10% after consecutive Bulwark procs. Heal only heals for 1 HP once Bulwark procs.]
     [Strike]
         [Deals 2 damage, interupts heal]
     [Kick]
