@@ -6,6 +6,7 @@ import pytest
 import os
 import random
 import git
+import sys
 from git import Repo
 
 print("Welcome to DBD:R! If you're confused or want to look at the rules, read 'Intro.md' or read 'Champion movesets.md' if you want to look at the different characters!")
@@ -1494,6 +1495,9 @@ while admin == True:
         pirateW = 0
         ninjaW = 0
         astroW = 0
+    elif admcom == "0":
+        print("Ending code")
+        sys.exit()
 
 
 
