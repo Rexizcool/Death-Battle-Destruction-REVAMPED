@@ -4,3 +4,13 @@ ninja,astronaut
 mage,knight
 pirate,cowboy
 knight,pirate
+mage,pirate
+pirate,astronaut
+astronaut,samurai
+mage,knight
+knight,pirate
+cowboy,astronaut
+astronaut,pirate
+cowboy,knight
+pirate, astronaut
+ninja, pirate

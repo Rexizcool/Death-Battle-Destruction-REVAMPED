@@ -1,6 +1,7 @@
 #importing necessary tools
 import pandas as pd
-import matplotlib as plt
+import matplotlib
+import matplotlib.pyplot as plt
 import pytest
 import os
 import random
@@ -49,12 +50,19 @@ no_float2 = False
 boating1 = False
 boating2 = False
 admin = False
+knightW = 0
+samuraiW = 0
+mageW = 0
+cowboyW = 0
+pirateW = 0
+ninjaW = 0
+astroW = 0
 Moves = ["nothing", "strike", "kick", "dodge", "parry", "heal"] #PLACEHOLDER, PLEASE IMPLEMENT SOMETHING BETTER
-Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut", "Copycat"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
+Characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut"] #I don't really know if I need this but never hurts to keep around jusssttt in case :)
 HP1 = 15
 HP2 = 15
 
-
+gr = pd.read_csv("/workspaces/Death-Battle-Destruction-REVAMPED/gameresults.csv")
 
 #creating classes for characters
 class Character:
@@ -1366,6 +1374,8 @@ while selecting1 == True:
     elif whichcharacter1 == "admin":
         admin = True
         gameend = False
+        selecting1 = False
+        selecting2 = False
         print("Admin granted.")
     else:
         print("Sorry, that is not a valid character. Please make sure you typed your character's name correctly before continuing.")
@@ -1455,6 +1465,36 @@ def turn(firstmove, secondmove, character1, character2, health1, health2, punish
     punishvalue1+=1
     punishvalue2+=1
     return endinghealth1, endinghealth2, stun1, stun2, punishvalue1, punishvalue2
+
+while admin == True:
+    admcom = input("What would you like to do? (type 'help' for a list of commands) ")
+    if admcom == "1":
+        characters = ["Knight", "Samurai", "Mage", "Cowboy", "Pirate", "Ninja", "Astronaut"]
+        for i in gr["Winning Character"]:
+            if i == "knight":
+                knightW += 1
+            if i == "samurai":
+                samuraiW += 1
+            if i == "mage":
+                mageW += 1
+            if i == "cowboy":
+                cowboyW += 1
+            if i == "pirate":
+                pirateW += 1
+            if i == "ninja":
+                ninjaW += 1
+            if i == "astronaut":
+                astroW += 1
+        characterWs = [knightW, samuraiW, mageW, cowboyW, pirateW, ninjaW, astroW]
+        print(f"Champion Wins : \nKnight - {knightW}\nSamurai - {samuraiW}\nMage - {mageW}\nCowboy - {cowboyW}\nPirate - {pirateW}\nNinja - {ninjaW}\nAstronaut - {astroW}")
+        knightW = 0
+        samuraiW = 0
+        mageW = 0
+        cowboyW = 0
+        pirateW = 0
+        ninjaW = 0
+        astroW = 0
+
 
 
 #while loop that lasts until the game ends
