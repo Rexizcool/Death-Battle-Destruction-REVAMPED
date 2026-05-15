@@ -9,3 +9,6 @@ https://docs.google.com/document/d/1HxolIgIJaGU0lR3il5EOo5qT1SVw0YMxG2UJ-YfYHEQ/
 
 Link to our video demonstrating the projects code:
 https://drive.google.com/file/d/1Y4pDj3_o8zsShVB0bnB_tPYY8C_5Dda6/view?usp=sharing
+
+Link to final project document (in case its needed):
+https://docs.google.com/document/d/1OOMTYxgv0RYg2zSqtSOBoemMYjp_-Drv7tK7dlB5sow/edit?usp=sharing
