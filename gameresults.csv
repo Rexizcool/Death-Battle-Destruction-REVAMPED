@@ -13,4 +13,7 @@ cowboy,astronaut
 astronaut,pirate
 cowboy,knight
 pirate, astronaut
-ninja, piratepirate,knight
+ninja, pirate
+pirate,knight
+
+knight,knight
